@@ -1,0 +1,24 @@
+<!-- bookshelf/templates/bookshelf/update_book.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Book</title>
+</head>
+<body>
+    <h1>Edit Book</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label>Title:</label><br>
+        <input type="text" name="title" value="{{ book.title }}"><br>
+        <label>Author:</label><br>
+        <input type="text" name="author" value="{{ book.author }}"><br>
+        <label>Description:</label><br>
+        <textarea name="description">{{ book.description }}</textarea><br>
+        <label>Published Date (YYYY-MM-DD):</label><br>
+        <input type="text" name="published_date" value="{{ book.published_date }}"><br><br>
+        <button type="submit">Update</button>
+    </form>
+    <br>
+    <a href="{% url 'book_list' %}">Back to Book List</a>
+</body>
+</html>
