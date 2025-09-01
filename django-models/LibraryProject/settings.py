@@ -36,8 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'relationship_app',  # ✅ Task-required app
-    # 'library_shelf',   ❌ Removed: not part of the task, and app not found
+    'LibraryProject.relationship_app',  # Corrected app path
+    # 'library_shelf',  # Removed as per previous instructions
 ]
 
 MIDDLEWARE = [
