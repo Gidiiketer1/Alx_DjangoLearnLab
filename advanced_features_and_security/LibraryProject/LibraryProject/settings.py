@@ -54,3 +54,5 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Enable browser's XSS filtering for extra protection
 SECURE_BROWSER_XSS_FILTER = True
+# Detect HTTPS requests properly when behind a proxy/load balancer
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
