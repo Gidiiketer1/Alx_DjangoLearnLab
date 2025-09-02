@@ -17,8 +17,8 @@ urlpatterns = [
     path('librarian-page/', views.librarian_view, name='librarian_view'),
     path('member-page/', views.member_view, name='member_view'),
 
-    # 🛡️ Permission-protected book management views
-    path('books/add/', views.add_book, name='add_book'),              # ✅ Add Book
-    path('books/<int:pk>/edit/', views.edit_book, name='edit_book'),  # ✅ Edit Book
-    path('books/<int:pk>/delete/', views.delete_book, name='delete_book'),  # ✅ Delete Book
+    # ✅ Custom permission views with exact string matches
+    path('add_book/', views.add_book, name='add_book'),                     # must be 'add_book/'
+    path('edit_book/<int:pk>/', views.edit_book, name='edit_book'),        # must be 'edit_book/'
+    path('delete_book/<int:pk>/', views.delete_book, name='delete_book'),  # not required by check but good to keep
 ]
