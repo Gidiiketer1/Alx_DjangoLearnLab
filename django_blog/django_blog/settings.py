@@ -1,17 +1,12 @@
 from pathlib import Path
 
-# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-y*w05giyxl+%eeb5qwiw9to$kqip)cb@&hldm^qfsy-_b*2m$0'
-
-# DEVELOPMENT ONLY — Do not use DEBUG=True in production!
+SECRET_KEY = 'your-secret-key-here'
 DEBUG = True
-
 ALLOWED_HOSTS = []
 
-# Application definition
+# ✅ Installed apps including blog and accounts
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -19,8 +14,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog',         # Your blog app
-    'accounts',     # Include this if you created the accounts app
+
+    # Your custom apps
+    'blog',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -35,16 +32,16 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'django_blog.urls'
 
+# ✅ Template settings (ensure it includes templates directory)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            BASE_DIR / 'templates',  # Optional: if using project-level templates
-        ],
+        'DIRS': [BASE_DIR / 'templates'],  # <- Add this line
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.request',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',  # Required for auth views
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -54,7 +51,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_blog.wsgi.application'
 
-# Database
+# ✅ Database (leave default or adjust if needed)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -62,24 +59,41 @@ DATABASES = {
     }
 }
 
-# Password validation
+# ✅ Password validators
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
-# Internationalization
+# ✅ Localization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# ✅ STATIC FILES CONFIGURATION
+# ✅ Static files configuration
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']   # Dev: load static files from 'static' folder
-STATIC_ROOT = BASE_DIR / 'staticfiles'     # Prod: where collectstatic will copy files to
 
-# Default primary key field type
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # <- Custom static directory
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"  # For production (collectstatic)
+
+# ✅ Default auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ✅ Optional login redirect
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'profile'
+LOGOUT_REDIRECT_URL = 'login'

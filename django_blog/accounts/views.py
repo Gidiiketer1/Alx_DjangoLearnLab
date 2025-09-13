@@ -1,4 +1,3 @@
-# accounts/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
@@ -20,8 +19,7 @@ def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
+            login(request, form.get_user())
             return redirect('profile')
     else:
         form = AuthenticationForm()
@@ -34,6 +32,8 @@ def logout_view(request):
 @login_required
 def profile_view(request):
     if request.method == 'POST':
-        request.user.email = request.POST.get('email')
-        request.user.save()
+        email = request.POST.get('email')
+        if email:
+            request.user.email = email
+            request.user.save()
     return render(request, 'accounts/profile.html')
