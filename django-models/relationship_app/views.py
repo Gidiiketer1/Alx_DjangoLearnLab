@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from .models import Library
-from .models import Book
+from .models import Library, Book
 
 
 def list_books(request):
