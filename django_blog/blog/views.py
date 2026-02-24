@@ -8,7 +8,10 @@ from .forms import PostForm, CommentForm, UserRegisterForm
 from django.contrib.auth import login
 from django.db.models import Q
 
-# Blog Post Views
+# ----------------------
+# Post Views (CRUD)
+# ----------------------
+
 class PostListView(ListView):
     model = Post
     template_name = 'blog/post_list.html'
@@ -46,7 +49,10 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         post = self.get_object()
         return self.request.user == post.author
 
-# Comment Views
+# ----------------------
+# Comment Views (CRUD)
+# ----------------------
+
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm
@@ -77,7 +83,10 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         comment = self.get_object()
         return self.request.user == comment.author
 
-# User Registration
+# ----------------------
+# User Registration & Profile
+# ----------------------
+
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -89,12 +98,14 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'blog/register.html', {'form': form})
 
-# Profile
 @login_required
 def profile(request):
     return render(request, 'blog/profile.html')
 
+# ----------------------
 # Search Functionality
+# ----------------------
+
 def search_posts(request):
     query = request.GET.get('q')
     posts = Post.objects.filter(
