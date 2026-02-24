@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Comment
 from .forms import PostForm, CommentForm, UserRegisterForm
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
 # ----------------------
@@ -14,13 +14,32 @@ from django.db.models import Q
 
 class PostListView(ListView):
     model = Post
-    template_name = 'blog/post_list.html'
+    template_name = 'blog/post_list.html'  # List all posts
     context_object_name = 'posts'
     ordering = ['-published_date']
 
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'blog/post_detail.html'
+    template_name = 'blog/post_detail.html'  # Single post with comments
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()
+        context['comments'] = post.comments.all()
+        context['form'] = CommentForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if request.user.is_authenticated:
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.post = self.object
+                comment.author = request.user
+                comment.save()
+                return redirect('post_detail', pk=self.object.pk)
+        return self.get(request, *args, **kwargs)
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
@@ -50,7 +69,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == post.author
 
 # ----------------------
-# Comment Views (CRUD)
+# Comment Views
 # ----------------------
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
@@ -84,7 +103,7 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == comment.author
 
 # ----------------------
-# User Registration & Profile
+# User Authentication Views
 # ----------------------
 
 def register(request):
